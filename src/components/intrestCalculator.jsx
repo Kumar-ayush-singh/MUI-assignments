@@ -1,5 +1,12 @@
-import { CurrencyRupee, ExpandMore, Percent } from "@mui/icons-material";
-import { Box, Button, Paper, Stack, Typography, useTheme } from "@mui/material";
+import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Percent from "@mui/icons-material/Percent";
+import Stack from  '@mui/material/Stack'
+import Typography from  '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
 import { filterNumber } from "../util/numberFunction";
 import InterestInput from "./InterestInput";

@@ -1,11 +1,10 @@
-import { Error } from "@mui/icons-material";
-import {
-  Box,
-  Slider,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Error from "@mui/icons-material/Error";
+import Stack from  '@mui/material/Stack'
+import Typography from  '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Slider from '@mui/material/Slider'
+import TextField from '@mui/material/TextField'
+
 import { CustomTooltip } from "./customTooltip";
 
 export default function InterestInput({

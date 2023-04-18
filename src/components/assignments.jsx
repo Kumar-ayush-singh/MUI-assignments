@@ -1,4 +1,10 @@
-import { Box, Card, CardContent, CardActions, Typography, Button, Link } from "@mui/material"
+import Typography from  '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
 import {Link as RRLink} from 'react-router-dom';
 
 export default function Assignments(){
