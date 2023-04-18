@@ -15,7 +15,7 @@ export default function Assignments(){
             <Link component={RRLink} to={'/grow-calculator'}>
               <Button component={RRLink} to="./grow-calculator">View Project</Button>
             </Link>
-            <Link href="#">
+            <Link href="https://github.com/Kumar-ayush-singh/MUI-assignments/tree/main/src">
               <Button>View Code</Button>
             </Link>
           </CardActions>
