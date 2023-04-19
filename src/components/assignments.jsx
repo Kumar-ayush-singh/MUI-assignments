@@ -45,7 +45,7 @@ export default function Assignments(){
             bottom: 0,
           }}>
             <Button component={RRLink} to="./dynamic-adornment">View Project</Button>
-            <Button href='#'>View Code</Button>
+            <Button href='https://github.com/Kumar-ayush-singh/MUI-assignments/blob/main/src/components/dynamicAdornment.jsx'>View Code</Button>
           </CardActions>
         </Card>
       </Box>
