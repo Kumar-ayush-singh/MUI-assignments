@@ -9,21 +9,43 @@ import {Link as RRLink} from 'react-router-dom';
 
 export default function Assignments(){
     return (
-      <Box width='400px' textAlign='left' p={5}>
+      <Box textAlign='left' p={5} sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '16px',
+        '& > *': {
+          flexBasis: '400px',
+          position: 'relative',
+        }
+      }}>
         <Card elevation={3}>
           <CardContent>
             <Typography variant='h5' gutterBottom>Compound Interest Calculator</Typography>
             <Typography>
-            Compounding interest, as opposed to simple interest, is the situation where your wealth increases exponentially because you earn interest on your total investments, the aggregation of your principal amount and the interest it incurs.
+              Compounding interest, as opposed to simple interest, is the situation where your wealth increases exponentially because you earn interest on your total investments, the aggregation of your principal amount and the interest it incurs.
             </Typography>
           </CardContent>
           <CardActions>
-            <Link component={RRLink} to={'/grow-calculator'}>
-              <Button component={RRLink} to="./grow-calculator">View Project</Button>
-            </Link>
-            <Link href="https://github.com/Kumar-ayush-singh/MUI-assignments/tree/main/src">
-              <Button>View Code</Button>
-            </Link>
+            <Button component={RRLink} to="./grow-calculator">View Project</Button>
+            <Button href="https://github.com/Kumar-ayush-singh/MUI-assignments/tree/main/src">View Code</Button>
+          </CardActions>
+        </Card>
+        
+
+        {/* with dynamic andonment */}
+        <Card elevation={3}>
+          <CardContent>
+            <Typography variant='h5' gutterBottom>Select as Input Adornment</Typography>
+            <Typography>
+             Trying to implement select as input adornment use case: selecting country code for a number
+            </Typography>
+          </CardContent>
+          <CardActions sx={{
+            position: 'absolute',
+            bottom: 0,
+          }}>
+            <Button component={RRLink} to="./dynamic-adornment">View Project</Button>
+            <Button href='#'>View Code</Button>
           </CardActions>
         </Card>
       </Box>
