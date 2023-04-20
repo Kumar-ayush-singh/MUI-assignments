@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import { filterNumber } from "../util/numberFunction";
+import { filterNumber, numberFormater } from "../util/numberFunction";
 import InterestInput from "./InterestInput";
 import NumberAnimator from "./numberAnimator";
 import { Doughnut } from "react-chartjs-2";
@@ -35,14 +35,15 @@ const frequencyArray = ['Yearly', 'Half yearly', 'Quarterly']
 
 export default function GrowIntrestCalculator() {
   const [error, setError] = useState([]);
-  const [amount, setAmount] = useState(10000);
+  const [amount, setAmount] = useState('10,000');
   const [rate, setRate] = useState(6);
   const [year, setYear] = useState(5);
   const [frequency, setFrequency] = useState(1);
   
   const theme = useTheme();
   
-  const totalAmount = amount * (Math.pow((1 + (rate/(frequency * 100))), frequency * year));
+  const intAmount = Number(amount.replaceAll(',', ''));
+  const totalAmount = intAmount * (Math.pow((1 + (rate/(frequency * 100))), frequency * year));
 
 
   //handler for amount change
@@ -50,16 +51,17 @@ export default function GrowIntrestCalculator() {
     const value = _event.target.value;
     let anyError = false;
 
-    const number = filterNumber(value);
+    const number = filterNumber(String(value).replaceAll(',', ''));
     console.log(number);
+    console.log(amount);
 
     if (number >= MAX_AMOUNT) {
-      setAmount(MAX_AMOUNT);
+      setAmount(numberFormater(MAX_AMOUNT));
     } else if (number < MIN_AMOUNT) {
-      setAmount(number);
+      setAmount(numberFormater(number));
       anyError = true;
     } else {
-      setAmount(number);
+      setAmount(numberFormater(number));
     }
 
     if (anyError) {
@@ -212,13 +214,13 @@ export default function GrowIntrestCalculator() {
             <Stack direction='row' justifyContent='space-between' marginTop={2}>
               <Typography color='gray'>Principal amount</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={amount}/>
+                <NumberAnimator value={intAmount}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography color='gray'>Total interest</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalAmount - amount}/>
+                <NumberAnimator value={totalAmount - intAmount}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
@@ -240,7 +242,7 @@ export default function GrowIntrestCalculator() {
                 datasets: [
                   {
                     label: 'amount',
-                    data: [amount, (totalAmount - amount)],
+                    data: [intAmount, (totalAmount - intAmount)],
                     backgroundColor: ['#98a4ff', '#5367ff'],
                     borderColor: ['#00000000', '#00000000'],
                     hoverOffset: 0,

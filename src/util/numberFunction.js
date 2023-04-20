@@ -1,4 +1,4 @@
-export function numberFormater(numb) {
+export function numberFormater(numb, withDecimal) {
   numb = Number(numb).toFixed(2);
   let numString = String(numb);
   let beforeDecimal = numString.substring(0, numString.indexOf("."));
@@ -8,16 +8,10 @@ export function numberFormater(numb) {
   );
 
   let number = Intl.NumberFormat("en-IN").format(Number(beforeDecimal));
-
-  return number + afterDecimal;
-}
-
-export function numberCounterAnimation(start, end, setter){
-    const increment = (end - start) /60;
-    for(let i=1; i>=60; i++){
-        const number = start + (i * increment);
-        setter(number);
-    }
+  if(withDecimal){
+    return number + afterDecimal;
+  }
+  return number;
 }
 
 //for filtering number form inputString

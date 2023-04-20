@@ -40,6 +40,7 @@ export default function Assignments(){
              Trying to implement select as input adornment use case: selecting country code for a number
             </Typography>
           </CardContent>
+          <CardActions>{/*for adjustment only*/}</CardActions>
           <CardActions sx={{
             position: 'absolute',
             bottom: 0,

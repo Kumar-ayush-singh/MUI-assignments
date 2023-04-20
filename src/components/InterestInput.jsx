@@ -66,7 +66,7 @@ export default function InterestInput({
       <Slider
         min={min}
         max={max}
-        value={value}
+        value={Number(String(value).replaceAll(',', ''))}
         step={step ? step : undefined}
         onChange={onChange}
         sx={{
