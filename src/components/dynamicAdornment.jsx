@@ -1,22 +1,12 @@
-import { KeyboardArrowDown } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormLabel,
-  Input,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  OutlinedInput,
-  Paper,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import Stack from  '@mui/material/Stack'
+import Typography from  '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import useTheme from '@mui/material/styles/useTheme'
+import InputAdornment from '@mui/material/InputAdornment'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 import { useRef, useState } from "react";
 
 
@@ -196,37 +186,9 @@ export default function DynamicAdornment() {
               ),
             }}
           />
-
-          {/* <FormControl>
-            <Button 
-              onClick={handleMenuBtnClick}
-              id='country-code-btn'
-              aria-controls={isMenuOpen ? 'country-code-menu' : undefined}
-              aria-haspopup={true}
-              aria-expanded={isMenuOpen? true : undefined}
-              endIcon={<KeyboardArrowDown/>}
-            >
-              +{countryCode}
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              onClose={handleMenuClose}
-              open={isMenuOpen}
-              id='country-code-menu'
-              MenuListProps={{
-                'aria-labelledby': 'country-code-btn'
-              }}
-            >
-              {
-                Object.keys(countryDictionary).map((key, i) => {
-                  return <MenuItem selected={countryCode == countryDictionary[key]} key={i} onClick={handleCountryCodeChange} value={countryDictionary[key]}>{`${getCountryFlag(key)} ${getCountryName(key)} +${countryDictionary[key]}`}</MenuItem>
-                })
-              }
-            </Menu>
-            <OutlinedInput/>
-          </FormControl> */}
-          
         </Stack>
+        <Typography>Phone number is : </Typography>    
+        <Typography fontWeight={700} gutterBottom>{`+${countryCode}-${phoneNumber}`}</Typography>      
       </Paper>
     </Box>
   );
