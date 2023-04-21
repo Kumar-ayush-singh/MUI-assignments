@@ -8,9 +8,9 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import { filterNumber, numberFormater } from "../util/numberFunction";
-import InterestInput from "./InterestInput";
-import NumberAnimator from "./numberAnimator";
+import { filterNumber, numberFormater } from "../../util/numberFunction";
+import InterestInput from "./common/InterestInput";
+import NumberAnimator from "./common/numberAnimator";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
 Chart.register(ArcElement, Tooltip, Legend);

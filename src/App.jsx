@@ -1,4 +1,4 @@
-import GrowIntrestCalculator from './components/intrestCalculator'
+import GrowIntrestCalculator from './components/calculators/intrestCalculator'
 import { Route, Routes } from 'react-router-dom'
 import Assignments from './components/assignments';
 import PageNotFound from './components/pageNotFound';

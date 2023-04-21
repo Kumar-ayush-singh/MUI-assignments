@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { numberFormater } from "../util/numberFunction";
+import { numberFormater } from "../../../util/numberFunction";
 
 export default function NumberAnimator({ value }) {
   const [count, setCount] = useState(value);
