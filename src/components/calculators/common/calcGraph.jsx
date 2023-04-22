@@ -18,7 +18,7 @@ export default function CalcGraph({
               {
                 label: 'amount',
                 data: [primary.value, secondary.value],
-                backgroundColor: [theme.palette.calcGraph.primary, theme.palette.calcGraph.secondary],
+                backgroundColor: [theme.palette.calculatorGraph.main, theme.palette.calculatorGraph.light],
                 borderColor: ['#00000000', '#00000000'],
                 hoverOffset: 0,
               }

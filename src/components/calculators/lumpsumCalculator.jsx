@@ -1,10 +1,8 @@
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import Percent from "@mui/icons-material/Percent";
 import Stack from  '@mui/material/Stack'
 import Typography from  '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
@@ -15,7 +13,7 @@ import CalcGraph from "./common/calcGraph";
 
 
 const MIN_MONTHLY_INVST = 500;
-const MAX_MONTHLY_INVST = 100000;
+const MAX_MONTHLY_INVST = 1000000;
 
 const MIN_RETURN_RATE = 1;
 const MAX_RETURN_RATE = 30;
@@ -23,42 +21,39 @@ const MAX_RETURN_RATE = 30;
 const MIN_YEAR = 1;
 const MAX_YEAR = 40;
 
-const MONTHLY_INVST = "monthlyInvst";
+const MONTHLY_INVST = "totalInvst";
 const RETURN_RATE = "returnRate";
 const YEAR = "year";
 
 
-export default function SipCalculator() {
+export default function LumpSumCalculator (){
   const [error, setError] = useState([]);
-  const [monthlyInvst, setMonthlyInvst] = useState('25,000');
+  const [totalInvst, setTotalInvst] = useState('25,000');
   const [returnRate, setReturnRate] = useState(12);
   const [year, setYear] = useState(10);
   
   const theme = useTheme();
   
-  const totalMonth = 12 * year;
-  const monthlyReturnRate = (returnRate/12);
-  const intMonthlyInvst = Number(monthlyInvst.replaceAll(',', ''));
-  const totalInvstAmount = intMonthlyInvst * totalMonth;
-  const totalAmount = intMonthlyInvst * ( ( ( Math.pow( (1 + (monthlyReturnRate/100)), totalMonth) - 1) / (monthlyReturnRate/100) ) * ( 1 + monthlyReturnRate/100) );
+  const totalInvstAmount = Number(totalInvst.replaceAll(',', ''));
+  const totalAmount = totalInvstAmount * ( Math.pow( ( 1 + returnRate/100), year ) );
 
 
-  //handler for monthlyInvst change
+  //handler for totalInvst change
   function handleMonthlyInvstChange(_event) {
     const value = _event.target.value;
     let anyError = false;
 
     const number = filterNumber(String(value).replaceAll(',', ''));
     console.log(number);
-    console.log(monthlyInvst);
+    console.log(totalInvst);
 
     if (number >= MAX_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(MAX_MONTHLY_INVST));
+      setTotalInvst(numberFormater(MAX_MONTHLY_INVST));
     } else if (number < MIN_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(number));
+      setTotalInvst(numberFormater(number));
       anyError = true;
     } else {
-      setMonthlyInvst(numberFormater(number));
+      setTotalInvst(numberFormater(number));
     }
 
     if (anyError) {
@@ -150,7 +145,7 @@ export default function SipCalculator() {
           },
           maxWidth: '1000px'
       }}>
-        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>SIP Calculator</Typography>
+        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>Lumpsum Calculator</Typography>
         <Stack spacing={2} p={4} sx={{
           flexDirection: {
             xs: 'column',
@@ -163,9 +158,9 @@ export default function SipCalculator() {
         }}>
           <Stack spacing={2} width="100%">
             <InterestInput
-              label="Monthly investmest"
+              label="Total investmest"
               inputStartAdornment={<CurrencyRupee fontSize="small" />}
-              value={monthlyInvst}
+              value={totalInvst}
               onChange={handleMonthlyInvstChange}
               min={MIN_MONTHLY_INVST}
               max={MAX_MONTHLY_INVST}
@@ -221,11 +216,11 @@ export default function SipCalculator() {
           }}>
               <CalcGraph 
                 primary={{
-                  label: 'Total interest',
+                  label: 'Est. returns',
                   value: totalAmount - totalInvstAmount,
                 }}
                 secondary={{
-                  label: 'Principal monthlyInvst',
+                  label: 'Invested amount',
                   value: totalInvstAmount
                 }}
               />

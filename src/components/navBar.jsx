@@ -1,16 +1,31 @@
 import { Construction, KeyboardArrowDown } from "@mui/icons-material";
 import { AppBar, Button, IconButton, Menu, MenuItem, Stack, Toolbar, Typography } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+
+const SIP = 'sip';
+const LUMPSUM = 'lumpsum';
+const CAGR = 'cagr';
+const INFLATION = 'inflation';
+
 
 export default function NavBar(){
+    const navigate = useNavigate();
+
     const [calcMenuAnchorEl, setCalcMenuAnchorEl] = useState(null);
     const isCalcMenuOpen = Boolean(calcMenuAnchorEl);
 
     const handleCalcClick = (_event) => {
         setCalcMenuAnchorEl(_event.target);
     }
-    const handleCalcMenuClose = () => {
+    const closeCalcMenu = () => {
         setCalcMenuAnchorEl(null);
+    }
+
+    const handleCalcMenuClick = (menu) => {
+        navigate(`/${menu}-calculator`);
+        closeCalcMenu();
     }
 
 
@@ -43,7 +58,7 @@ export default function NavBar(){
                 <Menu 
                     anchorEl={calcMenuAnchorEl} 
                     open={isCalcMenuOpen} 
-                    onClose={handleCalcMenuClose}
+                    onClose={closeCalcMenu}
                     MenuListProps={{
                         'aria-labelledby': 'calc-button'
                     }}
@@ -57,10 +72,26 @@ export default function NavBar(){
                         }
                     }}
                 >
-                    <MenuItem>SIP</MenuItem>
-                    <MenuItem>Lumpsum</MenuItem>
-                    <MenuItem>CAGR</MenuItem>
-                    <MenuItem>Inflation</MenuItem>
+                    <MenuItem 
+                        onClick={ () => handleCalcMenuClick(SIP)}
+                    >
+                        SIP
+                    </MenuItem>
+                    <MenuItem 
+                        onClick={ () => handleCalcMenuClick(LUMPSUM)}
+                    >
+                        Lumpsum
+                    </MenuItem>
+                    <MenuItem 
+                        onClick={ () => handleCalcMenuClick(CAGR)}
+                    >
+                        CAGR
+                    </MenuItem>
+                    <MenuItem 
+                        onClick={ () => handleCalcMenuClick(INFLATION)}
+                    >
+                        Inflation
+                    </MenuItem>
                 </Menu>
             </Toolbar>
         </AppBar>

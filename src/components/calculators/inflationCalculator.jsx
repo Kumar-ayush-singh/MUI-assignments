@@ -14,83 +14,78 @@ import NumberAnimator from "./common/numberAnimator";
 import CalcGraph from "./common/calcGraph";
 
 
-const MIN_MONTHLY_INVST = 500;
-const MAX_MONTHLY_INVST = 100000;
+const MIN_COST = 1000;
+const MAX_COST = 10000000;
 
-const MIN_RETURN_RATE = 1;
-const MAX_RETURN_RATE = 30;
+const MIN_INFL_RATE = 1;
+const MAX_INFL_RATE = 50;
 
 const MIN_YEAR = 1;
-const MAX_YEAR = 40;
+const MAX_YEAR = 30;
 
-const MONTHLY_INVST = "monthlyInvst";
-const RETURN_RATE = "returnRate";
+const COST = "currentCost";
+const INFL_RATE = "inflRate";
 const YEAR = "year";
 
 
-export default function SipCalculator() {
+export default function InflationCalculator(){
   const [error, setError] = useState([]);
-  const [monthlyInvst, setMonthlyInvst] = useState('25,000');
-  const [returnRate, setReturnRate] = useState(12);
-  const [year, setYear] = useState(10);
+  const [currentCost, setCurrentCost] = useState('1,00,000');
+  const [inflRate, setInflRate] = useState(6);
+  const [year, setYear] = useState(5);
   
   const theme = useTheme();
   
-  const totalMonth = 12 * year;
-  const monthlyReturnRate = (returnRate/12);
-  const intMonthlyInvst = Number(monthlyInvst.replaceAll(',', ''));
-  const totalInvstAmount = intMonthlyInvst * totalMonth;
-  const totalAmount = intMonthlyInvst * ( ( ( Math.pow( (1 + (monthlyReturnRate/100)), totalMonth) - 1) / (monthlyReturnRate/100) ) * ( 1 + monthlyReturnRate/100) );
+  const intCurrentCost = Number(currentCost.replaceAll(',', ''));
+  const totalAmount = intCurrentCost * (Math.pow((1 + (inflRate/100))), year);
 
 
-  //handler for monthlyInvst change
-  function handleMonthlyInvstChange(_event) {
+  //handler for currentCost change
+  function handleAmountChange(_event) {
     const value = _event.target.value;
     let anyError = false;
 
     const number = filterNumber(String(value).replaceAll(',', ''));
-    console.log(number);
-    console.log(monthlyInvst);
 
-    if (number >= MAX_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(MAX_MONTHLY_INVST));
-    } else if (number < MIN_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(number));
+    if (number >= MAX_COST) {
+      setCurrentCost(numberFormater(MAX_COST));
+    } else if (number < MIN_COST) {
+      setCurrentCost(numberFormater(number));
       anyError = true;
     } else {
-      setMonthlyInvst(numberFormater(number));
+      setCurrentCost(numberFormater(number));
     }
 
     if (anyError) {
-      if (!error.includes(MONTHLY_INVST)) {
-        setError([...error, MONTHLY_INVST]);
+      if (!error.includes(COST)) {
+        setError([...error, COST]);
       }
     } else {
-      setError(error.filter((err) => err !== MONTHLY_INVST));
+      setError(error.filter((err) => err !== COST));
     }
   }
 
-  //handler for returnRate change
+  //handler for inflRate change
   function handleRateChange(_event) {
     const value = _event.target.value;
     let anyError = false;
     const number = filterNumber(value, 2);
     
-    if (number >= MAX_RETURN_RATE) {
-      setReturnRate(MAX_RETURN_RATE);
-    } else if (number < MIN_RETURN_RATE) {
-      setReturnRate(number);
+    if (number >= MAX_INFL_RATE) {
+      setInflRate(MAX_INFL_RATE);
+    } else if (number < MIN_INFL_RATE) {
+      setInflRate(number);
       anyError = true;
     } else {
-      setReturnRate(number);
+      setInflRate(number);
     }
 
     if (anyError) {
-      if (!error.includes(RETURN_RATE)) {
-        setError([...error, RETURN_RATE]);
+      if (!error.includes(INFL_RATE)) {
+        setError([...error, INFL_RATE]);
       }
     } else {
-      setError(error.filter((err) => err !== RETURN_RATE));
+      setError(error.filter((err) => err !== INFL_RATE));
     }
   }
 
@@ -150,7 +145,7 @@ export default function SipCalculator() {
           },
           maxWidth: '1000px'
       }}>
-        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>SIP Calculator</Typography>
+        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>Compound Interest Calculator</Typography>
         <Stack spacing={2} p={4} sx={{
           flexDirection: {
             xs: 'column',
@@ -163,24 +158,24 @@ export default function SipCalculator() {
         }}>
           <Stack spacing={2} width="100%">
             <InterestInput
-              label="Monthly investmest"
+              label="Current Cost"
               inputStartAdornment={<CurrencyRupee fontSize="small" />}
-              value={monthlyInvst}
-              onChange={handleMonthlyInvstChange}
-              min={MIN_MONTHLY_INVST}
-              max={MAX_MONTHLY_INVST}
-              step={500}
-              error={error.includes(MONTHLY_INVST)}
+              value={currentCost}
+              onChange={handleAmountChange}
+              min={MIN_COST}
+              max={MAX_COST}
+              step={1000}
+              error={error.includes(COST)}
             />
             <InterestInput
-              label="Expected return rate (p.a)"
+              label="Rate of inflation (p.a)"
               inputEndAdornment={<Percent fontSize="small" />}
-              min={MIN_RETURN_RATE}
-              max={MAX_RETURN_RATE}
-              value={returnRate}
+              min={MIN_INFL_RATE}
+              max={MAX_INFL_RATE}
+              value={inflRate}
               onChange={handleRateChange}
               step={0.01}
-              error={error.includes(RETURN_RATE)}
+              error={error.includes(INFL_RATE)}
             />
             <InterestInput
               label="Time period"
@@ -194,19 +189,19 @@ export default function SipCalculator() {
             />
             
             <Stack direction='row' justifyContent='space-between' marginTop={2}>
-              <Typography color='gray'>Invested amount</Typography>
+              <Typography color='gray'>Current Cost</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalInvstAmount}/>
+                <NumberAnimator value={intCurrentCost}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
-              <Typography color='gray'>Est. returns</Typography>
+              <Typography color='gray'>Cost Increase</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalAmount - totalInvstAmount}/>
+                <NumberAnimator value={totalAmount - intCurrentCost}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
-              <Typography color='gray'>Total value</Typography>
+              <Typography color='gray'>Future Cost</Typography>
               <Typography fontWeight={700}>
                 <NumberAnimator value={totalAmount}/>
               </Typography>
@@ -221,12 +216,12 @@ export default function SipCalculator() {
           }}>
               <CalcGraph 
                 primary={{
-                  label: 'Total interest',
-                  value: totalAmount - totalInvstAmount,
+                  label: 'Total Inflation',
+                  value: totalAmount - intCurrentCost,
                 }}
                 secondary={{
-                  label: 'Principal monthlyInvst',
-                  value: totalInvstAmount
+                  label: 'Current Cost',
+                  value: intCurrentCost
                 }}
               />
             </Box>

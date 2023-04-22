@@ -1,49 +1,49 @@
-export function numberFormater(numb, withDecimal) {
-  numb = Number(numb).toFixed(2);
-  let numString = String(numb);
-  let beforeDecimal = numString.substring(0, numString.indexOf("."));
-  let afterDecimal = numString.substring(
+export function numberFormater(num, syncWithInput, withDecimal) {
+  const numString = String(num);
+  let prevIndexOfDecimal = numString.includes('.');
+  let prevNumAfterDecimal = '';
+
+  if(prevIndexOfDecimal != -1){
+    prevNumAfterDecimal = numString.substring(prevIndexOfDecimal);
+  }
+
+  num = Number(num).toFixed(2);
+  const beforeDecimal = numString.substring(0, numString.indexOf("."));
+  const afterDecimal = numString.substring(
     numString.indexOf("."),
     numString.length
   );
 
-  let number = Intl.NumberFormat("en-IN").format(Number(beforeDecimal));
+  let formatedNum = Intl.NumberFormat("en-IN").format(Number(beforeDecimal));
   if(withDecimal){
-    return number + afterDecimal;
+    if(syncWithInput){
+      return formatedNum + prevNumAfterDecimal;
+    }
+    return formatedNum + afterDecimal;
   }
-  return number;
+  return formatedNum;
 }
 
 //for filtering number form inputString
-export function filterNumber(number, digitAfterDecimal) {
+export function filterNumber(number, useDecimal) {
   let numberText = String(number);
   let newNumber = Number(number);
 
-  if (!isNaN(newNumber) && !digitAfterDecimal) {
-    return newNumber;
+  if (!isNaN(newNumber)) {
+    return numberText;
   }
 
-  newNumber = "";
-  let gotDecimalPoint = false;
-  let noOfDigitAfterDecimal = 0;
-  for (let i = 0; i < numberText.length; i++) {
-    const charCode = numberText.charCodeAt(i);
+  numberText = numberText.match(/\d+|\.+/g).join('');
 
-    if (charCode > 47 && charCode < 58) {
-      newNumber = newNumber + numberText.charAt(i);
-
-      if (gotDecimalPoint) {
-        noOfDigitAfterDecimal++;
-
-        if (noOfDigitAfterDecimal === digitAfterDecimal) {
-          break;
-        }
-      }
-    } else if (digitAfterDecimal && charCode == 46 && !gotDecimalPoint) {
-      newNumber = newNumber + ".";
-      gotDecimalPoint = true;
-    } else {
-      break;
+  const indexOfDecimal = numberText.indexOf('.');
+  if(indexOfDecimal != -1){
+    const numberBeforeDecimal = numberText.substring(0, indexOfDecimal);
+    const numberAfterDecimal = numberText.substring(indexOfDecimal).replace(/\.+/g, '');
+    if(useDecimal){
+      newNumber = numberBeforeDecimal + '.' + numberAfterDecimal;
+    }
+    else{
+      newNumber = numberBeforeDecimal;
     }
   }
 

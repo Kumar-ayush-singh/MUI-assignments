@@ -7,29 +7,29 @@ import NavBar from './components/navBar';
 import createTheme from '@mui/material/styles/createTheme';
 import { blue, green, grey, indigo, red, teal } from '@mui/material/colors';
 import { ThemeProvider } from '@mui/material';
+import SipCalculator from './components/calculators/sipCalculator';
+import LumpSumCalculator from './components/calculators/lumpsumCalculator';
+import CargCalculator from './components/calculators/cagrCalculator';
+import InflationCalculator from './components/calculators/inflationCalculator';
 
 
 const theme = createTheme({
   palette: {
-    calcInput: {
-      slider: {
-        rail: grey['300'],
-        track: teal['A700'],
-        thumb: 'white',
-      },
-      textField: {
-        bg: teal['50'],
-        text: teal['A700'],
-      },
-      error: {
-        bg: red['50'],
-        text: red['600'],
-      }
+    
+    calculatorPrimary: {
+      light: teal['50'],
+      main: teal['A700'],
+      contrastText: 'white',
     },
-    calcGraph: {
-      primary: indigo['A400'],
-      secondary: blue['A100']
-    }
+    calculatorError: {
+      light: red['50'],
+      main: red['600'],
+    },
+    calculatorGraph: {
+      main: indigo['A400'],
+      light: blue['A100']
+    },
+
   }
 })
 
@@ -41,6 +41,10 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Assignments/>}/>
+        <Route path='/sip-calculator' element={<SipCalculator/>}/>
+        <Route path='/lumpsum-calculator' element={<LumpSumCalculator/>}/>
+        <Route path='/cagr-calculator' element={<CargCalculator/>}/>
+        <Route path='/inflation-calculator' element={<InflationCalculator/>}/>
         <Route path='/grow-calculator' element={<GrowIntrestCalculator/>} />
         <Route path='/dynamic-adornment' element={<DynamicAdornment/>} />
         <Route path='/*' element={<PageNotFound/>}/>

@@ -4,10 +4,13 @@ import Typography from  '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import TextField from '@mui/material/TextField'
+import useTheme from "@mui/material/styles/useTheme";
+import grey from "@mui/material/colors/grey";
 
 
 import { CustomTooltip } from "./customTooltip";
-import useTheme from "@mui/material/styles/useTheme";
+import { filterNumber, numberFormater } from "../../../util/numberFunction";
+import { useEffect, useState } from "react";
 
 export default function InterestInput({
   value,
@@ -18,10 +21,49 @@ export default function InterestInput({
   min,
   max,
   step,
-  error,
+  formatValue,
+  useDecimal,
 }) {
-
+  const [currentValue, setCurrentValue] = useState(value);
+  const [error, setError] = useState(false);
   const theme = useTheme();
+
+  //for formating initial value
+  useEffect(() => {
+    if(formatValue){
+      setCurrentValue( numberFormater(value, useDecimal) );
+    }
+  }, []);
+
+
+
+  const handleInputChange = (_event) => {
+    const newValue = _event.target.value;
+    let isValueValid = false;
+    
+    const filteredString = filterNumber(newValue);
+    const filteredNumber = Number(filteredString);
+    let acceptedValue = filteredString;
+
+    if(filteredNumber >= max){
+      acceptedValue = max;
+    }
+    else if(filteredNumber < min){
+      isValueValid = true;
+    }
+    
+    if(formatValue){
+      setCurrentValue(numberFormater(acceptedValue, true, useDecimal));
+    }
+    else{
+      setCurrentValue(acceptedValue);
+    }
+    onChange(_event, acceptedValue == max ? max : filteredNumber);
+
+    setError(isValueValid);
+  }
+
+
 
   return (
     <>
@@ -48,19 +90,23 @@ export default function InterestInput({
               startAdornment: inputStartAdornment ? inputStartAdornment : null,
               endAdornment: inputEndAdornment ? inputEndAdornment : null,
             }}
-            value={value}
-            onChange={onChange}
+            value={currentValue}
+            onChange={handleInputChange}
             size="small"
             sx={{
               border: "none",
-              background: error ? theme.palette.calcInput.error.bg : theme.palette.calcInput.textField.bg,
+              background: error ? theme.palette.calculatorError.light : theme.palette.calculatorPrimary.light,
               "& fieldset": {
                 display: "none",
               },
-              "& svg, & input, & .MuiInputBase-root": {
-                color: error ? theme.palette.calcInput.error.text : theme.palette.calcInput.textField.text,
+              "& svg, & input, & .MuiInputBase-root, & .MuiTypography-root": {
+                color: error ? theme.palette.calculatorError.main : theme.palette.calculatorPrimary.main,
                 textAlign: "right",
+                fontWeight: 700,
               },
+              '& .MuiInputBase-root': {
+                paddingLeft: 0.5,
+              }
             }}
           />
         </Box>
@@ -70,21 +116,21 @@ export default function InterestInput({
       <Slider
         min={min}
         max={max}
-        value={Number(String(value).replaceAll(',', ''))}
+        value={Number(String(currentValue).replaceAll(',', ''))}
         step={step ? step : undefined}
-        onChange={onChange}
+        onChange={handleInputChange}
         sx={{
           "& .MuiSlider-rail": {
-            background: theme.palette.calcInput.slider.rail,
+            background: grey[200],
             height: "4px",
           },
           "& .MuiSlider-track": {
-            background: theme.palette.calcInput.slider.track,
+            background: theme.palette.calculatorPrimary.main,
             height: "4px",
             border: "none",
           },
           "& .MuiSlider-thumb": {
-            background: theme.palette.calcInput.slider.thumb,
+            background: 'white',
             width: "28px",
             height: "28px",
           },
