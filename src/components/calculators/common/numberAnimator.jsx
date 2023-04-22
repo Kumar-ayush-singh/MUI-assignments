@@ -25,7 +25,7 @@ export default function NumberAnimator({ value }) {
       } else {
         setCount(count + increment);
       }
-    }, 16);
+    }, 8);
 
     return () => clearInterval(intervalId);
   }, [count, value]);

@@ -11,9 +11,7 @@ import { useState } from "react";
 import { filterNumber, numberFormater } from "../../util/numberFunction";
 import InterestInput from "./common/InterestInput";
 import NumberAnimator from "./common/numberAnimator";
-import { Doughnut } from "react-chartjs-2";
-import { Chart, ArcElement, Legend, Tooltip } from "chart.js";
-Chart.register(ArcElement, Tooltip, Legend);
+import CalcGraph from "./common/calcGraph";
 
 
 const MIN_AMOUNT = 1000;
@@ -237,33 +235,16 @@ export default function GrowIntrestCalculator() {
               md: 'start'
             }
           }}>
-              <Doughnut data={{
-                labels: ['Principal amount', 'Total interest'],
-                datasets: [
-                  {
-                    label: 'amount',
-                    data: [intAmount, (totalAmount - intAmount)],
-                    backgroundColor: ['#98a4ff', '#5367ff'],
-                    borderColor: ['#00000000', '#00000000'],
-                    hoverOffset: 0,
-                  }
-                ]
-              }} options={{
-                hover: 'none',
-                cutout: '65%',
-                plugins: {
-                  legend: {
-                    onClick: () => {},
-                    labels: {
-                      usePointStyle: true,
-                      pointStyle: "rectRot",
-                      font: {
-                        family: 'roboto'
-                      }
-                    }
-                  },
-                }
-              }} />
+              <CalcGraph 
+                primary={{
+                  label: 'Total interest',
+                  value: totalAmount - intAmount,
+                }}
+                secondary={{
+                  label: 'Principal amount',
+                  value: intAmount
+                }}
+              />
             </Box>
         </Stack>
       </Paper>

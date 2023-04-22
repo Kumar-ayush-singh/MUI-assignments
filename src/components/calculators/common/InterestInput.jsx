@@ -5,7 +5,9 @@ import Box from '@mui/material/Box'
 import Slider from '@mui/material/Slider'
 import TextField from '@mui/material/TextField'
 
+
 import { CustomTooltip } from "./customTooltip";
+import useTheme from "@mui/material/styles/useTheme";
 
 export default function InterestInput({
   value,
@@ -18,6 +20,8 @@ export default function InterestInput({
   step,
   error,
 }) {
+
+  const theme = useTheme();
 
   return (
     <>
@@ -49,12 +53,12 @@ export default function InterestInput({
             size="small"
             sx={{
               border: "none",
-              background: error ? "#fae9e5" : "#e5faf5",
+              background: error ? theme.palette.calcInput.error.bg : theme.palette.calcInput.textField.bg,
               "& fieldset": {
                 display: "none",
               },
               "& svg, & input, & .MuiInputBase-root": {
-                color: error ? "#d32f2f" : "#00d09c",
+                color: error ? theme.palette.calcInput.error.text : theme.palette.calcInput.textField.text,
                 textAlign: "right",
               },
             }}
@@ -71,16 +75,16 @@ export default function InterestInput({
         onChange={onChange}
         sx={{
           "& .MuiSlider-rail": {
-            background: "#ecedef",
+            background: theme.palette.calcInput.slider.rail,
             height: "4px",
           },
           "& .MuiSlider-track": {
-            background: "#00d09c",
+            background: theme.palette.calcInput.slider.track,
             height: "4px",
             border: "none",
           },
           "& .MuiSlider-thumb": {
-            background: "white",
+            background: theme.palette.calcInput.slider.thumb,
             width: "28px",
             height: "28px",
           },
