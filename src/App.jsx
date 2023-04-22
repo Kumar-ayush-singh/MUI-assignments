@@ -1,11 +1,11 @@
-import GrowIntrestCalculator from './components/calculators/intrestCalculator'
+import GrowIntrestCalculator from './components/calculators/compounIintrestCalculator'
 import { Route, Routes } from 'react-router-dom'
 import Assignments from './components/assignments';
 import PageNotFound from './components/pageNotFound';
 import DynamicAdornment from './components/dynamicAdornment';
 import NavBar from './components/navBar';
 import createTheme from '@mui/material/styles/createTheme';
-import { blue, green, grey, indigo, red, teal } from '@mui/material/colors';
+import { blue, indigo, red, teal } from '@mui/material/colors';
 import { ThemeProvider } from '@mui/material';
 import SipCalculator from './components/calculators/sipCalculator';
 import LumpSumCalculator from './components/calculators/lumpsumCalculator';

@@ -1,5 +1,4 @@
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
-import Percent from "@mui/icons-material/Percent";
 import Stack from  '@mui/material/Stack'
 import Typography from  '@mui/material/Typography'
 import Box from '@mui/material/Box'
@@ -7,7 +6,7 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import InterestInput from "./common/InterestInput";
+import CalculatorInput from "./common/calculatorInput";
 import { InputAdornment } from "@mui/material";
 
 const MIN_INITIAL_INVST = 1000;
@@ -19,13 +18,8 @@ const MAX_FINAL_INBST = 10000000;
 const MIN_YEAR = 1;
 const MAX_YEAR = 40;
 
-const INITIAL_INVST = "initialInvst";
-const FINAL_INVST = "finalInvst";
-const YEAR = "year";
 
-
-export default function CargCalculator(){
-  const [error, setError] = useState([]);
+export default function CargCalculator(){;
   const [initialInvst, setInitialInvst] = useState(5000);
   const [finalInvst, setFinalInvst] = useState(25000);
   const [year, setYear] = useState(5);
@@ -83,7 +77,7 @@ export default function CargCalculator(){
       }}>
         <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>CAGR Calculator</Typography>
         <Stack spacing={2} p={4}>
-            <InterestInput
+            <CalculatorInput
               label="Initial investmest"
               inputStartAdornment={
                 <InputAdornment position="end">
@@ -97,7 +91,7 @@ export default function CargCalculator(){
               step={500}
               formatValue
             />
-            <InterestInput
+            <CalculatorInput
               label="Final investment"
               inputStartAdornment={
                 <InputAdornment position="end">
@@ -111,7 +105,7 @@ export default function CargCalculator(){
               step={0.01}
               formatValue
             />
-            <InterestInput
+            <CalculatorInput
               label="Duration of investment"
               inputEndAdornment={
                 <InputAdornment position="end">

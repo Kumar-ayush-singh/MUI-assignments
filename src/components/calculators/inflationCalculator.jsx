@@ -1,15 +1,12 @@
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import Percent from "@mui/icons-material/Percent";
 import Stack from  '@mui/material/Stack'
 import Typography from  '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import { filterNumber, numberFormater } from "../../util/numberFunction";
-import InterestInput from "./common/InterestInput";
+import CalculatorInput from "./common/calculatorInput";
 import NumberAnimator from "./common/numberAnimator";
 import CalcGraph from "./common/calcGraph";
 
@@ -23,95 +20,33 @@ const MAX_INFL_RATE = 50;
 const MIN_YEAR = 1;
 const MAX_YEAR = 30;
 
-const COST = "currentCost";
-const INFL_RATE = "inflRate";
-const YEAR = "year";
-
 
 export default function InflationCalculator(){
-  const [error, setError] = useState([]);
-  const [currentCost, setCurrentCost] = useState('1,00,000');
+  const [currentCost, setCurrentCost] = useState(100000);
   const [inflRate, setInflRate] = useState(6);
   const [year, setYear] = useState(5);
   
   const theme = useTheme();
-  
-  const intCurrentCost = Number(currentCost.replaceAll(',', ''));
-  const totalAmount = intCurrentCost * (Math.pow((1 + (inflRate/100))), year);
+
+  const futureCost = currentCost * (Math.pow((1 + (inflRate/100)), year));
 
 
   //handler for currentCost change
-  function handleAmountChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(String(value).replaceAll(',', ''));
-
-    if (number >= MAX_COST) {
-      setCurrentCost(numberFormater(MAX_COST));
-    } else if (number < MIN_COST) {
-      setCurrentCost(numberFormater(number));
-      anyError = true;
-    } else {
-      setCurrentCost(numberFormater(number));
-    }
-
-    if (anyError) {
-      if (!error.includes(COST)) {
-        setError([...error, COST]);
-      }
-    } else {
-      setError(error.filter((err) => err !== COST));
-    }
+  function handleCurrentCostChange(_event, acceptedValue) {
+    console.log(acceptedValue)
+    setCurrentCost(acceptedValue);
   }
 
   //handler for inflRate change
-  function handleRateChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-    const number = filterNumber(value, 2);
-    
-    if (number >= MAX_INFL_RATE) {
-      setInflRate(MAX_INFL_RATE);
-    } else if (number < MIN_INFL_RATE) {
-      setInflRate(number);
-      anyError = true;
-    } else {
-      setInflRate(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(INFL_RATE)) {
-        setError([...error, INFL_RATE]);
-      }
-    } else {
-      setError(error.filter((err) => err !== INFL_RATE));
-    }
+  function handleInflRateChange(_event, acceptedValue) {
+    console.log(acceptedValue);
+    setInflRate(acceptedValue);
   }
 
   //handler for year change
-  function handleYearChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(value);
-
-    if (number >= MAX_YEAR) {
-      setYear(MAX_YEAR);
-    } else if (number < MIN_YEAR) {
-      setYear(number);
-      anyError = true;
-    } else {
-      setYear(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(YEAR)) {
-        setError([...error, YEAR]);
-      }
-    } else {
-      setError(error.filter((err) => err !== YEAR));
-    }
+  function handleYearChange(_event, acceptedValue) {
+    console.log(acceptedValue);
+    setYear(acceptedValue);
   }
 
 
@@ -145,7 +80,7 @@ export default function InflationCalculator(){
           },
           maxWidth: '1000px'
       }}>
-        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>Compound Interest Calculator</Typography>
+        <Typography variant="h4" fontWeight={500} textAlign='left' p={4} paddingBottom={0}>Inflation Calculator</Typography>
         <Stack spacing={2} p={4} sx={{
           flexDirection: {
             xs: 'column',
@@ -157,27 +92,27 @@ export default function InflationCalculator(){
           }
         }}>
           <Stack spacing={2} width="100%">
-            <InterestInput
+            <CalculatorInput
               label="Current Cost"
               inputStartAdornment={<CurrencyRupee fontSize="small" />}
               value={currentCost}
-              onChange={handleAmountChange}
+              onChange={handleCurrentCostChange}
               min={MIN_COST}
               max={MAX_COST}
               step={1000}
-              error={error.includes(COST)}
+              formatValue
             />
-            <InterestInput
+            <CalculatorInput
               label="Rate of inflation (p.a)"
               inputEndAdornment={<Percent fontSize="small" />}
               min={MIN_INFL_RATE}
               max={MAX_INFL_RATE}
               value={inflRate}
-              onChange={handleRateChange}
+              onChange={handleInflRateChange}
               step={0.01}
-              error={error.includes(INFL_RATE)}
+              useDecimal
             />
-            <InterestInput
+            <CalculatorInput
               label="Time period"
               inputEndAdornment="Yr"
               min={MIN_YEAR}
@@ -185,25 +120,24 @@ export default function InflationCalculator(){
               value={year}
               onChange={handleYearChange}
               step={1}
-              error={error.includes(YEAR)}
             />
             
             <Stack direction='row' justifyContent='space-between' marginTop={2}>
               <Typography color='gray'>Current Cost</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={intCurrentCost}/>
+                <NumberAnimator value={currentCost}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography color='gray'>Cost Increase</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalAmount - intCurrentCost}/>
+                <NumberAnimator value={futureCost - currentCost}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography color='gray'>Future Cost</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalAmount}/>
+                <NumberAnimator value={futureCost}/>
               </Typography>
             </Stack>
           </Stack>
@@ -217,11 +151,11 @@ export default function InflationCalculator(){
               <CalcGraph 
                 primary={{
                   label: 'Total Inflation',
-                  value: totalAmount - intCurrentCost,
+                  value: futureCost - currentCost,
                 }}
                 secondary={{
                   label: 'Current Cost',
-                  value: intCurrentCost
+                  value: currentCost
                 }}
               />
             </Box>

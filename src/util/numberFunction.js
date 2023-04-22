@@ -1,5 +1,5 @@
 export function numberFormater(num, syncWithInput, withDecimal) {
-  const numString = String(num);
+  let numString = String(num);
   let prevIndexOfDecimal = numString.includes('.');
   let prevNumAfterDecimal = '';
 
@@ -8,6 +8,7 @@ export function numberFormater(num, syncWithInput, withDecimal) {
   }
 
   num = Number(num).toFixed(2);
+  numString = String(num);
   const beforeDecimal = numString.substring(0, numString.indexOf("."));
   const afterDecimal = numString.substring(
     numString.indexOf("."),
@@ -26,26 +27,29 @@ export function numberFormater(num, syncWithInput, withDecimal) {
 
 //for filtering number form inputString
 export function filterNumber(number, useDecimal) {
-  let numberText = String(number);
+  let numberString = String(number);
   let newNumber = Number(number);
 
-  if (!isNaN(newNumber)) {
-    return numberText;
+  // if (!isNaN(newNumber) && useDecimal) {
+  //   return numberString;
+  // }
+
+  const filteredArray = numberString.match(/\d+|\.+/g);
+  numberString = filteredArray ? filteredArray.join('') : '';
+  const indexOfDecimal = numberString.indexOf('.');
+
+  if(indexOfDecimal == -1){
+    return numberString;
   }
-
-  numberText = numberText.match(/\d+|\.+/g).join('');
-
-  const indexOfDecimal = numberText.indexOf('.');
-  if(indexOfDecimal != -1){
-    const numberBeforeDecimal = numberText.substring(0, indexOfDecimal);
-    const numberAfterDecimal = numberText.substring(indexOfDecimal).replace(/\.+/g, '');
-    if(useDecimal){
-      newNumber = numberBeforeDecimal + '.' + numberAfterDecimal;
-    }
-    else{
-      newNumber = numberBeforeDecimal;
-    }
+  
+  const numberBeforeDecimal = numberString.substring(0, indexOfDecimal);
+  const numberAfterDecimal = numberString.substring(indexOfDecimal).replace(/\.+/g, '');
+  if(useDecimal){
+    newNumber = numberBeforeDecimal + '.' + numberAfterDecimal.substring(0, 2);
   }
-
+  else{
+    newNumber = numberBeforeDecimal;
+  }
+  
   return newNumber;
 }

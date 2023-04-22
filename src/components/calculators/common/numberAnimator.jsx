@@ -30,5 +30,5 @@ export default function NumberAnimator({ value }) {
     return () => clearInterval(intervalId);
   }, [count, value]);
 
-  return <>₹{numberFormater(count, true)}</>;
+  return <>₹{numberFormater(count, false, true)}</>;
 }

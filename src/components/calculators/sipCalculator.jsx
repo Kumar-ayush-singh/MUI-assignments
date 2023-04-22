@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
 import { filterNumber, numberFormater } from "../../util/numberFunction";
-import InterestInput from "./common/InterestInput";
+import CalculatorInput from "./common/calculatorInput";
 import NumberAnimator from "./common/numberAnimator";
 import CalcGraph from "./common/calcGraph";
 
@@ -23,14 +23,9 @@ const MAX_RETURN_RATE = 30;
 const MIN_YEAR = 1;
 const MAX_YEAR = 40;
 
-const MONTHLY_INVST = "monthlyInvst";
-const RETURN_RATE = "returnRate";
-const YEAR = "year";
-
 
 export default function SipCalculator() {
-  const [error, setError] = useState([]);
-  const [monthlyInvst, setMonthlyInvst] = useState('25,000');
+  const [monthlyInvst, setMonthlyInvst] = useState(25000);
   const [returnRate, setReturnRate] = useState(12);
   const [year, setYear] = useState(10);
   
@@ -38,85 +33,23 @@ export default function SipCalculator() {
   
   const totalMonth = 12 * year;
   const monthlyReturnRate = (returnRate/12);
-  const intMonthlyInvst = Number(monthlyInvst.replaceAll(',', ''));
-  const totalInvstAmount = intMonthlyInvst * totalMonth;
-  const totalAmount = intMonthlyInvst * ( ( ( Math.pow( (1 + (monthlyReturnRate/100)), totalMonth) - 1) / (monthlyReturnRate/100) ) * ( 1 + monthlyReturnRate/100) );
+  const totalInvstAmount = monthlyInvst * totalMonth;
+  const totalAmount = monthlyInvst * ( ( ( Math.pow( (1 + (monthlyReturnRate/100)), totalMonth) - 1) / (monthlyReturnRate/100) ) * ( 1 + monthlyReturnRate/100) );
 
 
   //handler for monthlyInvst change
-  function handleMonthlyInvstChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(String(value).replaceAll(',', ''));
-    console.log(number);
-    console.log(monthlyInvst);
-
-    if (number >= MAX_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(MAX_MONTHLY_INVST));
-    } else if (number < MIN_MONTHLY_INVST) {
-      setMonthlyInvst(numberFormater(number));
-      anyError = true;
-    } else {
-      setMonthlyInvst(numberFormater(number));
-    }
-
-    if (anyError) {
-      if (!error.includes(MONTHLY_INVST)) {
-        setError([...error, MONTHLY_INVST]);
-      }
-    } else {
-      setError(error.filter((err) => err !== MONTHLY_INVST));
-    }
+  function handleMonthlyInvstChange(_event, acceptedValue) {
+      setMonthlyInvst(acceptedValue);
   }
 
   //handler for returnRate change
-  function handleRateChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-    const number = filterNumber(value, 2);
-    
-    if (number >= MAX_RETURN_RATE) {
-      setReturnRate(MAX_RETURN_RATE);
-    } else if (number < MIN_RETURN_RATE) {
-      setReturnRate(number);
-      anyError = true;
-    } else {
-      setReturnRate(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(RETURN_RATE)) {
-        setError([...error, RETURN_RATE]);
-      }
-    } else {
-      setError(error.filter((err) => err !== RETURN_RATE));
-    }
+  function handleRateChange(_event, acceptedValue) {
+    setReturnRate(acceptedValue);
   }
 
   //handler for year change
-  function handleYearChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(value);
-
-    if (number >= MAX_YEAR) {
-      setYear(MAX_YEAR);
-    } else if (number < MIN_YEAR) {
-      setYear(number);
-      anyError = true;
-    } else {
-      setYear(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(YEAR)) {
-        setError([...error, YEAR]);
-      }
-    } else {
-      setError(error.filter((err) => err !== YEAR));
-    }
+  function handleYearChange(_event, acceptedValue) {
+    setYear(acceptedValue);
   }
 
 
@@ -162,7 +95,7 @@ export default function SipCalculator() {
           }
         }}>
           <Stack spacing={2} width="100%">
-            <InterestInput
+            <CalculatorInput
               label="Monthly investmest"
               inputStartAdornment={<CurrencyRupee fontSize="small" />}
               value={monthlyInvst}
@@ -170,9 +103,9 @@ export default function SipCalculator() {
               min={MIN_MONTHLY_INVST}
               max={MAX_MONTHLY_INVST}
               step={500}
-              error={error.includes(MONTHLY_INVST)}
+              formatValue
             />
-            <InterestInput
+            <CalculatorInput
               label="Expected return rate (p.a)"
               inputEndAdornment={<Percent fontSize="small" />}
               min={MIN_RETURN_RATE}
@@ -180,9 +113,9 @@ export default function SipCalculator() {
               value={returnRate}
               onChange={handleRateChange}
               step={0.01}
-              error={error.includes(RETURN_RATE)}
+              useDecimal
             />
-            <InterestInput
+            <CalculatorInput
               label="Time period"
               inputEndAdornment="Yr"
               min={MIN_YEAR}
@@ -190,7 +123,6 @@ export default function SipCalculator() {
               value={year}
               onChange={handleYearChange}
               step={1}
-              error={error.includes(YEAR)}
             />
             
             <Stack direction='row' justifyContent='space-between' marginTop={2}>

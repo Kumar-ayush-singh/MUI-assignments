@@ -8,8 +8,7 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import { filterNumber, numberFormater } from "../../util/numberFunction";
-import InterestInput from "./common/InterestInput";
+import CalculatorInput from "./common/calculatorInput";
 import NumberAnimator from "./common/numberAnimator";
 import CalcGraph from "./common/calcGraph";
 
@@ -23,107 +22,41 @@ const MAX_RATE = 50;
 const MIN_YEAR = 1;
 const MAX_YEAR = 30;
 
-const AMOUNT = "amount";
-const RATE = "rate";
-const YEAR = "year";
-
 
 const frequencyArray = ['Yearly', 'Half yearly', 'Quarterly']
 
 
-export default function GrowIntrestCalculator() {
-  const [error, setError] = useState([]);
-  const [amount, setAmount] = useState('10,000');
+export default function compoundIntrestCalculator() {
+  const [amount, setAmount] = useState(10000);
   const [rate, setRate] = useState(6);
   const [year, setYear] = useState(5);
   const [frequency, setFrequency] = useState(1);
   
   const theme = useTheme();
   
-  const intAmount = Number(amount.replaceAll(',', ''));
-  const totalAmount = intAmount * (Math.pow((1 + (rate/(frequency * 100))), frequency * year));
+  const totalAmount = amount * (Math.pow((1 + (rate/(frequency * 100))), frequency * year));
 
 
   //handler for amount change
-  function handleAmountChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(String(value).replaceAll(',', ''));
-    console.log(number);
-    console.log(amount);
-
-    if (number >= MAX_AMOUNT) {
-      setAmount(numberFormater(MAX_AMOUNT));
-    } else if (number < MIN_AMOUNT) {
-      setAmount(numberFormater(number));
-      anyError = true;
-    } else {
-      setAmount(numberFormater(number));
-    }
-
-    if (anyError) {
-      if (!error.includes(AMOUNT)) {
-        setError([...error, AMOUNT]);
-      }
-    } else {
-      setError(error.filter((err) => err !== AMOUNT));
-    }
+  function handleAmountChange(_event, acceptedValue) {
+    setAmount(acceptedValue);
   }
 
   //handler for rate change
-  function handleRateChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-    const number = filterNumber(value, 2);
-    
-    if (number >= MAX_RATE) {
-      setRate(MAX_RATE);
-    } else if (number < MIN_RATE) {
-      setRate(number);
-      anyError = true;
-    } else {
-      setRate(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(RATE)) {
-        setError([...error, RATE]);
-      }
-    } else {
-      setError(error.filter((err) => err !== RATE));
-    }
+  function handleRateChange(_event, acceptedValue) {
+    setRate(acceptedValue);
   }
 
   //handler for year change
-  function handleYearChange(_event) {
-    const value = _event.target.value;
-    let anyError = false;
-
-    const number = filterNumber(value);
-
-    if (number >= MAX_YEAR) {
-      setYear(MAX_YEAR);
-    } else if (number < MIN_YEAR) {
-      setYear(number);
-      anyError = true;
-    } else {
-      setYear(number);
-    }
-
-    if (anyError) {
-      if (!error.includes(YEAR)) {
-        setError([...error, YEAR]);
-      }
-    } else {
-      setError(error.filter((err) => err !== YEAR));
-    }
+  function handleYearChange(_event, acceptedValue) {
+    setYear(acceptedValue);
   }
 
   function changeFrequency(){
-    if(frequency >= 4){
+    if(frequency > 4){
       setFrequency(1);
-    } else{
+    }
+    else{
       setFrequency(frequency * 2);
     }
   }
@@ -171,7 +104,7 @@ export default function GrowIntrestCalculator() {
           }
         }}>
           <Stack spacing={2} width="100%">
-            <InterestInput
+            <CalculatorInput
               label="Principal amount"
               inputStartAdornment={<CurrencyRupee fontSize="small" />}
               value={amount}
@@ -179,9 +112,9 @@ export default function GrowIntrestCalculator() {
               min={MIN_AMOUNT}
               max={MAX_AMOUNT}
               step={1000}
-              error={error.includes(AMOUNT)}
+              formatValue
             />
-            <InterestInput
+            <CalculatorInput
               label="Rate of interest (p.a)"
               inputEndAdornment={<Percent fontSize="small" />}
               min={MIN_RATE}
@@ -189,9 +122,9 @@ export default function GrowIntrestCalculator() {
               value={rate}
               onChange={handleRateChange}
               step={0.01}
-              error={error.includes(RATE)}
+              useDecimal
             />
-            <InterestInput
+            <CalculatorInput
               label="Time period"
               inputEndAdornment="Yr"
               min={MIN_YEAR}
@@ -199,7 +132,6 @@ export default function GrowIntrestCalculator() {
               value={year}
               onChange={handleYearChange}
               step={1}
-              error={error.includes(YEAR)}
             />
 
             <Box display='flex' justifyContent='space-between' align-items='center'>
@@ -212,13 +144,13 @@ export default function GrowIntrestCalculator() {
             <Stack direction='row' justifyContent='space-between' marginTop={2}>
               <Typography color='gray'>Principal amount</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={intAmount}/>
+                <NumberAnimator value={amount}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography color='gray'>Total interest</Typography>
               <Typography fontWeight={700}>
-                <NumberAnimator value={totalAmount - intAmount}/>
+                <NumberAnimator value={totalAmount - amount}/>
               </Typography>
             </Stack>
             <Stack direction='row' justifyContent='space-between'>
@@ -238,11 +170,11 @@ export default function GrowIntrestCalculator() {
               <CalcGraph 
                 primary={{
                   label: 'Total interest',
-                  value: totalAmount - intAmount,
+                  value: totalAmount - amount,
                 }}
                 secondary={{
                   label: 'Principal amount',
-                  value: intAmount
+                  value: amount
                 }}
               />
             </Box>

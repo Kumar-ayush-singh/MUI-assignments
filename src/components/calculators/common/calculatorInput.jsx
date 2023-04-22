@@ -12,7 +12,7 @@ import { CustomTooltip } from "./customTooltip";
 import { filterNumber, numberFormater } from "../../../util/numberFunction";
 import { useEffect, useState } from "react";
 
-export default function InterestInput({
+export default function CalculatorInput({
   value,
   onChange,
   label,
@@ -41,7 +41,7 @@ export default function InterestInput({
     const newValue = _event.target.value;
     let isValueValid = false;
     
-    const filteredString = filterNumber(newValue);
+    const filteredString = filterNumber(newValue, useDecimal);
     const filteredNumber = Number(filteredString);
     let acceptedValue = filteredString;
 
@@ -61,6 +61,9 @@ export default function InterestInput({
     onChange(_event, acceptedValue == max ? max : filteredNumber);
 
     setError(isValueValid);
+
+    // console.log(currentValue);
+    // console.warn('newValue', acceptedValue);
   }
 
 
@@ -92,6 +95,7 @@ export default function InterestInput({
             }}
             value={currentValue}
             onChange={handleInputChange}
+            placeholder="0"
             size="small"
             sx={{
               border: "none",
