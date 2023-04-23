@@ -13,14 +13,19 @@ export default function NumberAnimator({ value }) {
 
   useEffect(() => {
     let intervalId;
-    const increment = (value - countRef.current) / 30;
+
+    let finalValue  = 0;
+    if(!isNaN(value)){
+      finalValue = value;
+    }
+    const increment = (finalValue - countRef.current) / 30;
 
     intervalId = setInterval(() => {
       if (
-        (increment > 0 && count + increment >= value) ||
-        (increment < 0 && count + increment <= value)
+        (increment > 0 && count + increment >= finalValue) ||
+        (increment < 0 && count + increment <= finalValue)
       ) {
-        setCount(value);
+        setCount(finalValue);
         clearInterval(intervalId);
       } else {
         setCount(count + increment);

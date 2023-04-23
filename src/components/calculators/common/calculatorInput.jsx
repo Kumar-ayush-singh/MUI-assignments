@@ -10,7 +10,7 @@ import grey from "@mui/material/colors/grey";
 
 import { CustomTooltip } from "./customTooltip";
 import { filterNumber, numberFormater } from "../../../util/numberFunction";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function CalculatorInput({
   value,
@@ -26,6 +26,13 @@ export default function CalculatorInput({
 }) {
   const [currentValue, setCurrentValue] = useState(value);
   const [error, setError] = useState(false);
+
+  const preState = useRef({
+    cursorPosition: null,
+    inputEl: null,
+    key: null
+  });
+
   const theme = useTheme();
 
   //for formating initial value
@@ -36,34 +43,88 @@ export default function CalculatorInput({
   }, []);
 
 
+  useEffect(() => {
+    const cursorPos = preState.current.cursorPosition;
+    const inputEl = preState.current.inputEl;
+    if(cursorPos != null && inputEl){
+      inputEl.setSelectionRange(cursorPos, cursorPos);
+    }
+  }, [currentValue, preState])
 
+  
   const handleInputChange = (_event) => {
-    const newValue = _event.target.value;
-    let isValueValid = false;
+    const newInputValue = _event.target.value;
+    let cursorPos = null;
+
+    if(_event.target instanceof HTMLElement){
+      preState.current.inputEl = _event.target;
+      cursorPos = _event.target.selectionStart;
+      preState.current.cursorPosition = cursorPos;
+    }
+   
+    let filteredString = filterNumber(newInputValue, useDecimal);
     
-    const filteredString = filterNumber(newValue, useDecimal);
+    //if deleting digit if blocked by ','
+    const preKey = preState.current.key;
+    if(
+      filteredString == filterNumber(currentValue, useDecimal) &&
+      (preKey == 'Delete' || preKey == 'Backspace')
+    ){
+      const curValue = String(currentValue);
+    if(preKey == 'Backspace'){
+      filteredString = filterNumber(
+        curValue.substring(0, cursorPos - 1) +
+        curValue.substring(cursorPos),
+        useDecimal,
+      )
+    }
+    else{
+      filteredString = filterNumber(
+        curValue.substring(0, cursorPos) +
+        curValue.substring(cursorPos + 2),
+        useDecimal,
+        )
+      }
+    }
+
     const filteredNumber = Number(filteredString);
     let acceptedValue = filteredString;
-
+  
+    //for validation
+    let isValueValid = false;
     if(filteredNumber >= max){
       acceptedValue = max;
-    }
-    else if(filteredNumber < min){
+    } else if(filteredNumber < min){
       isValueValid = true;
     }
     
+    //if value to be formated
     if(formatValue){
-      setCurrentValue(numberFormater(acceptedValue, true, useDecimal));
-    }
-    else{
+      const newFormatedNumber = numberFormater(acceptedValue, true, useDecimal);
+      setCurrentValue(newFormatedNumber);
+  
+      //for restoring crusor position, distrupted by formatting
+      const lenDifference = newFormatedNumber.length - currentValue.length;
+      if( Math.abs(lenDifference) == 2 ){
+        preState.current.cursorPosition += (
+          (lenDifference)/2
+        );
+      }
+    } else{
       setCurrentValue(acceptedValue);
     }
+  
+    //sending data to parent element with accepted value as number
     onChange(_event, acceptedValue == max ? max : filteredNumber);
-
     setError(isValueValid);
 
-    // console.log(currentValue);
-    // console.warn('newValue', acceptedValue);
+  }
+
+  function handleKeyDown(_event){
+    if (_event.isComposing || _event.keyCode === 229) {
+      return;
+    }
+    preState.current.key = _event.key;
   }
 
 
@@ -95,6 +156,7 @@ export default function CalculatorInput({
             }}
             value={currentValue}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder="0"
             size="small"
             sx={{

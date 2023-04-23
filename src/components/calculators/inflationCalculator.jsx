@@ -33,19 +33,16 @@ export default function InflationCalculator(){
 
   //handler for currentCost change
   function handleCurrentCostChange(_event, acceptedValue) {
-    console.log(acceptedValue)
     setCurrentCost(acceptedValue);
   }
 
   //handler for inflRate change
   function handleInflRateChange(_event, acceptedValue) {
-    console.log(acceptedValue);
     setInflRate(acceptedValue);
   }
 
   //handler for year change
   function handleYearChange(_event, acceptedValue) {
-    console.log(acceptedValue);
     setYear(acceptedValue);
   }
 

@@ -1,14 +1,11 @@
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
-import ExpandMore from "@mui/icons-material/ExpandMore";
 import Percent from "@mui/icons-material/Percent";
 import Stack from  '@mui/material/Stack'
 import Typography from  '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import useTheme from '@mui/material/styles/useTheme'
 import { useState } from "react";
-import { filterNumber, numberFormater } from "../../util/numberFunction";
 import CalculatorInput from "./common/calculatorInput";
 import NumberAnimator from "./common/numberAnimator";
 import CalcGraph from "./common/calcGraph";
@@ -39,7 +36,7 @@ export default function SipCalculator() {
 
   //handler for monthlyInvst change
   function handleMonthlyInvstChange(_event, acceptedValue) {
-      setMonthlyInvst(acceptedValue);
+    setMonthlyInvst(acceptedValue);
   }
 
   //handler for returnRate change
@@ -153,11 +150,11 @@ export default function SipCalculator() {
           }}>
               <CalcGraph 
                 primary={{
-                  label: 'Total interest',
+                  label: 'Est. returns',
                   value: totalAmount - totalInvstAmount,
                 }}
                 secondary={{
-                  label: 'Principal monthlyInvst',
+                  label: 'Invested amount',
                   value: totalInvstAmount
                 }}
               />

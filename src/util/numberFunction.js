@@ -1,18 +1,18 @@
-export function numberFormater(num, syncWithInput, withDecimal) {
-  let numString = String(num);
-  let prevIndexOfDecimal = numString.includes('.');
+export function numberFormater(inputNumString, syncWithInput, withDecimal) {
+  let filteredNumString = filterNumber(inputNumString, withDecimal);
+  let prevIndexOfDecimal = filteredNumString.includes('.');
   let prevNumAfterDecimal = '';
 
   if(prevIndexOfDecimal != -1){
-    prevNumAfterDecimal = numString.substring(prevIndexOfDecimal);
+    prevNumAfterDecimal = filteredNumString.substring(prevIndexOfDecimal);
   }
 
-  num = Number(num).toFixed(2);
-  numString = String(num);
-  const beforeDecimal = numString.substring(0, numString.indexOf("."));
-  const afterDecimal = numString.substring(
-    numString.indexOf("."),
-    numString.length
+  const numValue = Number(filteredNumString).toFixed(2);
+  filteredNumString = String(numValue);
+  const beforeDecimal = filteredNumString.substring(0, filteredNumString.indexOf("."));
+  const afterDecimal = filteredNumString.substring(
+    filteredNumString.indexOf("."),
+    filteredNumString.length
   );
 
   let formatedNum = Intl.NumberFormat("en-IN").format(Number(beforeDecimal));
